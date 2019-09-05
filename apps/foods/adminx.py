@@ -1,6 +1,6 @@
 import xadmin
 
-from .models import ShopInfo, Tags, UploadImage
+from .models import ShopInfo, Tags, UploadImage, Comment
 from xadmin import views
 
 
@@ -12,9 +12,11 @@ class ShopInfoAdmin(object):
     search_fields = ('name',)
     # ordering设置默认排序字段，负号表示降序排序
     ordering = ('id',)
+    list_display = ['name', 'level', 'desc', 'add_time', 'counts', 'tags', 'img']
 
 
 xadmin.site.register(ShopInfo, ShopInfoAdmin)
+
 
 # tags
 class TagsAdmin(object):
@@ -28,6 +30,7 @@ class TagsAdmin(object):
 
 xadmin.site.register(Tags, TagsAdmin)
 
+
 # UploadImage
 class UploadImageAdmin(object):
     # 图标设置
@@ -36,16 +39,31 @@ class UploadImageAdmin(object):
     search_fields = ('name',)
     # ordering设置默认排序字段，负号表示降序排序
     ordering = ('id',)
+    list_display = ['name', 'image_img', 'url', 'add_time']
 
 
 xadmin.site.register(UploadImage, UploadImageAdmin)
 
 
+# UploadImage
+class CommentAdmin(object):
+    # 图标设置
+    model_icon = 'fa fa-file-text'
+    # 搜索字段
+    search_fields = ('name',)
+    # ordering设置默认排序字段，负号表示降序排序
+    ordering = ('id',)
+    list_display = ['name', 'content', 'create_time']
+
+
+xadmin.site.register(Comment, CommentAdmin)
+
+
 # 全局设置
 class GlobalSetting(object):
     site_title = "好吃一条街"  # 页面左上角title内容
-    site_footer = "LEON"       # 页脚内容
-    menu_style = 'accordion'   # 左边导航栏 收缩 手风琴
+    site_footer = "LEON"  # 页脚内容
+    menu_style = 'accordion'  # 左边导航栏 收缩 手风琴
 
 
 xadmin.site.register(views.CommAdminView, GlobalSetting)

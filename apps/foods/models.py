@@ -5,6 +5,7 @@ from datetime import datetime
 # 标签表
 from stdimage.models import StdImageField
 
+
 # 热搜
 class HotSearchWords(models.Model):
     """
@@ -37,7 +38,7 @@ class Tags(models.Model):
 
 
 class UploadImage(models.Model):
-    """上传图片功能"""
+    '''上传图片功能'''
     name = models.CharField(max_length=30, verbose_name="名称", default="")  # 标题
     image = StdImageField(max_length=100,
                           upload_to='path/to',
@@ -97,7 +98,7 @@ class ShopInfo(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return self.location_name
+        return self.name
 
 
 # 评论表
@@ -117,6 +118,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.name
-
 
 

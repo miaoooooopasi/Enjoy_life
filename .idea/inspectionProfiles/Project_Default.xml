@@ -73,6 +73,9 @@
           <option value="rest_framework_jwt.views" />
           <option value="ip" />
           <option value="foods.adminx.object" />
+          <option value="rest_framework.viewsets" />
+          <option value="django.contrib.auth.get_user_model" />
+          <option value="user_operation.views.IsOwnerOrReadOnly" />
         </list>
       </option>
     </inspection_tool>

@@ -20,6 +20,7 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
 
 # ---------------------------------------------------------
 '''
@@ -52,9 +53,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'xadmin',
     'crispy_forms',
-    'rest_framework',
     'djcelery',
     'django_redis',
     'locations',
@@ -62,10 +63,16 @@ INSTALLED_APPS = [
     'users',
     'apps.foods',
     'apps.user_operation',
+    'stdimage',
+    'corsheaders',
+    'django_filters',
 
 ]
 
+
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,6 +81,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# CORS
+CORS_ORIGIN_WHITELIST = (
+    'https://127.0.0.1:8000',
+    'https://localhost:8000',
+)
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'Enjoy_life.urls'
 
@@ -113,7 +127,7 @@ DATABASES = {
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '3306',
-        "OPTIONS":{"init_command":"SET default_storage_engine=INNODB;"}
+        "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
     }
 }
 # ---------------------------------------------------------
@@ -162,24 +176,26 @@ STATIC_URL = '/static/'
 rest_framework配置
 '''
 REST_FRAMEWORK = {
+    # 过滤
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     # 分页
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 每页显示的个数
     'PAGE_SIZE': 10,
     # 配置jwt
     'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework.authentication.BasicAuthentication',
-            'rest_framework.authentication.SessionAuthentication',
-            'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        ),
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
     # 限速设置
     'DEFAULT_THROTTLE_CLASSES': (
-            'rest_framework.throttling.AnonRateThrottle',   # 未登陆用户
-            'rest_framework.throttling.UserRateThrottle'    # 登陆用户
-        ),
+        'rest_framework.throttling.AnonRateThrottle',  # 未登陆用户
+        'rest_framework.throttling.UserRateThrottle'  # 登陆用户
+    ),
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '3/minute',         # 每分钟可以请求两次
-        'user': '5/minute'          # 每分钟可以请求五次
+        'anon': '20/minute',  # 每分钟可以请求20次
+        'user': '50/minute'  # 每分钟可以请求50次
     },
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema'
 }
@@ -188,13 +204,12 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # 有效期限
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',                       # JWT跟前端保持一致，比如“token”这里设置成JWT
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',  # JWT跟前端保持一致，比如“token”这里设置成JWT
 }
 
-
 REST_FRAMEWORK_EXTENSIONS = {
-    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 5   #5s过期，时间自己可以随便设定
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 5  # 5s过期，时间自己可以随便设定
 }
 # ---------------------------------------------------------
 
@@ -221,3 +236,24 @@ NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 # 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'users.UserProfile'
 # ---------------------------------------------------------
+
+
+# 手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+
+# 腾讯短信设置
+APIKEY = "eb61539f093f6126d2079c3e56b15376"
+
+# 自定义登陆认证
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+
+)
+
+# 静态文件
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    ("js", os.path.join(STATIC_ROOT, "js")),
+    ("css", os.path.join(STATIC_ROOT, "css")),
+]
