@@ -44,7 +44,7 @@ progressbar2==3.42.0
 PyJWT==1.7.1
 python-utils==2.3.0
 pytz==2019.2
-PyYAML==5.1.2
+PyYAML==5.4
 redis==3.3.6
 requests==2.22.0
 six==1.12.0
