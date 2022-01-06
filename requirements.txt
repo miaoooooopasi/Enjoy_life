@@ -2,7 +2,7 @@ amqp==2.5.0
 anyjson==0.3.3
 backports.csv==1.0.7
 billiard==3.6.0.0
-celery==4.4.0rc2
+celery==5.2.2
 celery-with-redis==3.0
 certifi==2019.6.16
 chardet==3.0.4
